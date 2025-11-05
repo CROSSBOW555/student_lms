@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<h2>Student Dashboard</h2>
+<p style="font-size: 1.1em; color: var(--text-light); margin-top: -10px;">Welcome, <strong>{{ session['user_name'] }}</strong>!</p>
+
+<div class="card">
+    <h2>Lectures</h2>
+    {% if lectures %}
+        <ul>
+        {% for lecture in lectures %}
+            <li>
+                <strong>{{ lecture.title }}</strong>: {{ lecture.description }}
+                <a href="{{ url_for('uploaded_file', filename=lecture.file_path) }}" target="_blank">(Download/Play)</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No lectures available yet.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Assignments</h2>
+    {% if assignments %}
+        {% for assignment in assignments %}
+            <article>
+                <h4>{{ assignment.title }} (ID: {{ assignment.assignment_id }})</h4>
+                <p>{{ assignment.description }}</p>
+                <a href="{{ url_for('uploaded_file', filename=assignment.file_path) }}" target="_blank" class="btn btn-outline">Download Assignment</a>
+                
+                <hr style="margin: 1.5em 0;">
+
+                <form action="{{ url_for('submit_assignment', assignment_id=assignment.assignment_id) }}" method="post" enctype="multipart/form-data">
+                    <label><strong>Submit Your Solution:</strong></label>
+                    <input type="file" name="file" required>
+                    <button type="submit" style="width: auto;">Upload</button>
+                </form>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>No assignments available yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

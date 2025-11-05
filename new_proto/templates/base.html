@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- The title for each page will be inserted here -->
+    <title>{% block title %}SmartLearn LMS{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="{{ url_for('dashboard') if 'user_id' in session else url_for('login') }}" class="logo">SmartLearn LMS</a>
+            <nav>
+                {% if 'user_id' in session %}
+                    {% if session['user_role'] == 'Admin' %}
+                        <a href="{{ url_for('manage_lectures') }}">Manage Lectures</a>
+                        <a href="{{ url_for('manage_assignments') }}">Manage Assignments</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('signup') }}" class="btn">Sign Up</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Flash messages will appear here on every page -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flash-messages">
+                  {% for category, message in messages %}
+                    <div class="notice {{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            
+            <!-- The main content from other pages will be inserted here -->
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ "now"|datetimeformat("%Y") }} SmartLearn LMS. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

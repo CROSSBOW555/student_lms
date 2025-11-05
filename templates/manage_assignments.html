@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Assignments</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <header>
+        <h1>Manage Assignments</h1>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Back to Dashboard</a> |
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Upload a New Assignment</h2>
+            <form method="post" enctype="multipart/form-data">
+                <label>Title</label>
+                <input type="text" name="title" required>
+                <label>Description</label>
+                <textarea name="description"></textarea>
+                <label>Assignment File</label>
+                <input type="file" name="file" required>
+                <button type="submit">Upload Assignment</button>
+            </form>
+        </section>
+        <hr>
+        <section>
+            <h2>Submissions</h2>
+            {% if assignments %}
+                {% for assignment in assignments %}
+                <article>
+                    <h4>{{ assignment.title }} (ID: {{ assignment.assignment_id }})</h4>
+                    {% set assignment_submissions = submissions|selectattr('assignment_id', 'equalto', assignment.assignment_id)|list %}
+                    {% if assignment_submissions %}
+                        <table>
+                        {% for sub in assignment_submissions %}
+                            <tr>
+                                <td>{{ sub.student_name }}</td>
+                                <td><a href="{{ url_for('uploaded_file', filename=sub.file_path) }}">View Submission</a></td>
+                                <td>Current Grade: {{ sub.grade }}</td>
+                                <td>
+                                    <form action="{{ url_for('grade_submission', submission_id=sub.submission_id) }}" method="post" style="display:inline;">
+                                        <input type="text" name="grade" placeholder="e.g., A+" size="10">
+                                        <button type="submit">Grade</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    {% else %}
+                        <p>No submissions for this assignment yet.</p>
+                    {% endif %}
+                </article>
+                {% endfor %}
+            {% else %}
+                <p>No assignments uploaded yet.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

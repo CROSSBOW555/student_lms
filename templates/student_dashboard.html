@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <header>
+        <h1>Student Dashboard</h1>
+        <p>Welcome, <strong>{{ session['user_name'] }}</strong>!</p>
+        <nav>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <p class="notice {{ category }}">{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <h2>Lectures</h2>
+        {% if lectures %}
+            <ul>
+            {% for lecture in lectures %}
+                <li>
+                    <strong>{{ lecture.title }}</strong>: {{ lecture.description }}
+                    <a href="{{ url_for('uploaded_file', filename=lecture.file_path) }}" target="_blank">(play)</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No lectures available yet.</p>
+        {% endif %}
+
+        <hr>
+        
+        <h2>Assignments</h2>
+        {% if assignments %}
+            {% for assignment in assignments %}
+                <article>
+                    <h4>{{ assignment.title }} (ID: {{ assignment.assignment_id }})</h4>
+                    <p>{{ assignment.description }}</p>
+                    <a href="{{ url_for('uploaded_file', filename=assignment.file_path) }}" target="_blank">Download Assignment File</a>
+                    
+                    <form action="{{ url_for('submit_assignment', assignment_id=assignment.assignment_id) }}" method="post" enctype="multipart/form-data">
+                        <label>Submit Your Solution:</label>
+                        <input type="file" name="file" required>
+                        <button type="submit">Upload</button>
+                    </form>
+                </article>
+            {% endfor %}
+        {% else %}
+            <p>No assignments available yet.</p>
+        {% endif %}
+    </main>
+</body>
+</html>

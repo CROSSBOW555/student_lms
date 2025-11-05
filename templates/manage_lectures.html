@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Lectures</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <header>
+        <h1>Manage Lectures</h1>
+        <p>Welcome, <strong>{{ session['user_name'] }}</strong>!</p>
+        <nav>
+            <a href="{{ url_for('dashboard') }}">Back to Dashboard</a> |
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Upload a New Lecture</h2>
+            <form method="post" enctype="multipart/form-data">
+                <label for="title">Lecture Title</label>
+                <input type="text" name="title" required>
+                <label for="description">Description</label>
+                <textarea name="description" rows="3"></textarea>
+                <label for="file">Lecture File</label>
+                <input type="file" name="file" required>
+                <button type="submit">Upload</button>
+            </form>
+        </section>
+        <hr>
+        <section>
+            <h2>Existing Lectures</h2>
+            {% if lectures %}
+                {% for lecture in lectures %}
+                <article>
+                    <h4>{{ lecture.title }}</h4>
+                    <p>{{ lecture.description }}</p>
+                    <a href="{{ url_for('uploaded_file', filename=lecture.file_path) }}" target="_blank">Download File</a>
+                </article>
+                {% endfor %}
+            {% else %}
+                <p>No lectures have been uploaded yet.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

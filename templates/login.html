@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SmartLearn LMS</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to SmartLearn LMS</h1>
+        <p>Please log in to continue.</p>
+    </header>
+
+    <main>
+        <form action="{{ url_for('login') }}" method="post">
+            
+            <label for="email">Email Address</label>
+            <input type="email" name="email" id="email" placeholder="you@example.com" required>
+            
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+            
+            <button type="submit">Login</button>
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <p class="notice {{ category }}">{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <hr>
+        
+        <p>Don't have an account? 
+            <a href="{{ url_for('signup') }}">Sign Up Here</a>
+        </p>
+    </main>
+
+</body>
+</html>

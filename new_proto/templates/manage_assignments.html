@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Manage Assignments{% endblock %}
+
+{% block content %}
+<h2>Manage Assignments</h2>
+
+<div class="card">
+    <h3>Upload a New Assignment</h3>
+    <form method="post" enctype="multipart/form-data">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" required>
+        
+        <label for="description">Description</label>
+        <textarea name="description" id="description"></textarea>
+        
+        <label for="file">Assignment File</label>
+        <input type="file" name="file" id="file" required>
+        
+        <button type="submit">Upload Assignment</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Submissions</h3>
+    {% if assignments %}
+        {% for assignment in assignments %}
+        <article>
+            <h4>{{ assignment.title }} (ID: {{ assignment.assignment_id }})</h4>
+            {% set assignment_submissions = submissions|selectattr('assignment_id', 'equalto', assignment.assignment_id)|list %}
+            {% if assignment_submissions %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>File</th>
+                            <th>Grade</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for sub in assignment_submissions %}
+                        <tr>
+                            <td>{{ sub.student_name }}</td>
+                            <td><a href="{{ url_for('uploaded_file', filename=sub.file_path) }}">View Submission</a></td>
+                            <td><strong>{{ sub.grade }}</strong></td>
+                            <td>
+                                <form action="{{ url_for('grade_submission', submission_id=sub.submission_id) }}" method="post" style="display: flex; gap: 5px;">
+                                    <input type="text" name="grade" placeholder="e.g., A+" style="margin-bottom: 0; width: 100px;">
+                                    <button type="submit" style="width: auto;">Grade</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No submissions for this assignment yet.</p>
+            {% endif %}
+        </article>
+        {% endfor %}
+    {% else %}
+        <p>No assignments uploaded yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

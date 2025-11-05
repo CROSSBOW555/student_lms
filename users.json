@@ -1,0 +1,26 @@
+[
+    {
+        "user_id": 1,
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "password": "password",
+        "role": "Admin",
+        "join_date": "2025-08-18 12:00:00"
+    },
+    {
+        "user_id": 2,
+        "name": "Mohit Varshney",
+        "email": "mohit@123.com",
+        "password": "mohit@123",
+        "role": "Student",
+        "join_date": "2025-08-18 12:54:08"
+    },
+    {
+        "user_id": 3,
+        "name": "aditya",
+        "email": "adityasharna1210@gmail.com",
+        "password": "Aditya@1",
+        "role": "Student",
+        "join_date": "2025-08-18 13:25:22"
+    }
+]
